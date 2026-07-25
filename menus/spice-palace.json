@@ -5,7 +5,7 @@
     {
       "categoryName": "Mains & Rice",
       "items": [
-        { "id": 1, "name": "Jollof Rice & Grilled Chicken", "desc": "Party jollof served with fried plantain", "price": 4500, "img": "https://images.unsplash.com/photo-1574484284002-7a2d93e13739?w=200" },
+        { "id": 1, "name": "Jollof & Grilled Chicken", "desc": "Party jollof served with fried plantain", "price": 4500, "img": "https://images.unsplash.com/photo-1574484284002-7a2d93e13739?w=200" },
         { "id": 2, "name": "Asun Special Platter", "desc": "Spicy diced goat meat with peppers", "price": 6000, "img": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200" }
       ]
     },
