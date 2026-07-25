@@ -5,7 +5,7 @@
     {
       "categoryName": "Mains & Rice",
       "items": [
-        { "id": 1, "name": "Jollof Rice & Grilled Chicken", "desc": "Party jollof served with fried plantain", "price": 4500, "img": "[https://images.unsplash.com/photo-1574484284002-7a2d93e13739?w=200](https://images.unsplash.com/photo-1574484284002-7a2d93e13739?w=200)"
+        { "id": 1, "name": "Jollof Rice & Grilled Chicken", "desc": "Party jollof served with fried plantain", "price": 4500, "img": "https://www.bing.com/images/search?view=detailV2&ccid=fY80tB0P&id=1F8CB76BE3A3136040CF56EE9B62EA45CF73A3E4&thid=OIP.fY80tB0PtV0nySotqk2xnAHaH5&mediaurl=https%3A%2F%2Fwww.shutterstock.com%2Fshutterstock%2Fphotos%2F2585552247%2Fdisplay_1500%2Fstock-photo-nigerian-jollof-rice-with-grilled-chicken-and-plantains-2585552247.jpg&cdnurl=https%3A%2F%2Fth.bing.com%2Fth%2Fid%2FR.7d8f34b41d0fb55d27c92a2daa4db19c%3Frik%3D5KNzz0XqYpvuVg%26pid%3DImgRaw%26r%3D0&exph=1600&expw=1500&q=jollof+rice+and+grilled+chicken+image&ck=CD37A4163CFCACC5471878303900C1C8&selectedindex=4&vt=0&sim=11&shtc=0&shth=OIP.fY80tB0PtV0nySotqk2xnAHaH5&shsc=idp&form=EX0050&shid=8f57d4be-f0f3-4b90-b0ec-23ed4cd03ced&shtp=GetUrl&shtk=TmlnZXJpYW4gSm9sbG9mIFJpY2UgR3JpbGxlZCBDaGlja2VuIFBsYW50YWlucyBTdG9jayBQaG90byAyNTg1NTUyMjQ3IC4uLg%3D%3D&shdk=Rm91bmQgb24gQmluZyBmcm9tIHd3dy5zaHV0dGVyc3RvY2suY29t&shhk=AaQZEVUYt%2Bzum9EcBdAZ6Yt1WUTKAmCdwk0STcq8u80%3D"
         { "id": 2, "name": "Asun Special Platter", "desc": "Spicy diced goat meat with peppers", "price": 6000, "img": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200" }
       ]
     },
