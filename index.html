@@ -58,7 +58,8 @@
 
     async function loadMenu() {
       try {
-        const response = await fetch(`menus/${restaurantId}.json`);
+        // Updated path with explicit relative notation for GitHub Pages reliability
+        const response = await fetch(`./menus/${restaurantId}.json`);
         if (!response.ok) throw new Error("Menu not found");
         restaurantData = await response.json();
         
