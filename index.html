@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Menu</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; padding: 0; background-color: #f4f6f9; color: #333; }
+    .header { background: #111; color: white; padding: 20px 15px; text-align: center; }
+    .header h1 { margin: 0 0 5px 0; font-size: 22px; }
+    .table-badge { background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 5px;}
+    .container { padding: 15px; padding-bottom: 140px; max-width: 600px; margin: 0 auto; }
+    .category-title { font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; color: #222; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
+    .menu-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+    .menu-card img { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; margin-right: 12px; }
+    .menu-info { flex-grow: 1; }
+    .menu-info h3 { margin: 0 0 4px 0; font-size: 15px; }
+    .menu-info p { margin: 0 0 6px 0; color: #666; font-size: 12px; }
+    .price { font-weight: bold; color: #111; font-size: 14px; }
+    .add-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; }
+    .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; color: white; padding: 15px; border-radius: 16px 16px 0 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; box-sizing: border-box;}
+    .cart-summary { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 600; }
+    .comment-box { width: 100%; padding: 8px 10px; border-radius: 6px; border: none; margin-bottom: 10px; font-size: 13px; box-sizing: border-box; }
+    .order-btn { background: #28a745; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; font-size: 15px; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1 id="res-name">Loading Menu...</h1>
+    <span class="table-badge" id="table-display">Table --</span>
+  </div>
+
+  <div class="container" id="menu-container">
+    <p style="text-align:center; color:#777;">Loading categories and dishes...</p>
+  </div>
+
+  <div class="cart-bar">
+    <div class="cart-summary">
+      <span>Items: <span id="cart-count">0</span></span>
+      <span>Total: <span id="currency-symbol">₦</span><span id="cart-total">0.00</span></span>
+    </div>
+    <input type="text" id="order-comment" class="comment-box" placeholder="Special additions (e.g., extra pepper, no onions)">
+    <button class="order-btn" onclick="sendOrder()">Send to Kitchen</button>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const restaurantId = urlParams.get('res') || 'spice-palace';
+    const tableNumber = urlParams.get('table') || '1';
+
+    document.getElementById('table-display').innerText = `Table ${tableNumber}`;
+
+    let restaurantData = {};
+    let cart = [];
+    let total = 0;
+    let currency = '₦';
+
+    async function loadMenu() {
+      try {
+        const response = await fetch(`menus/${restaurantId}.json`);
+        if (!response.ok) throw new Error("Menu not found");
+        restaurantData = await response.json();
+        
+        document.getElementById('res-name').innerText = restaurantData.restaurantName;
+        currency = restaurantData.currency || '₦';
+        document.getElementById('currency-symbol').innerText = currency;
+
+        const menuContainer = document.getElementById('menu-container');
+        menuContainer.innerHTML = ""; 
+
+        restaurantData.categories.forEach(category => {
+          menuContainer.innerHTML += `<div class="category-title">${category.categoryName}</div>`;
+          
+          category.items.forEach(item => {
+            menuContainer.innerHTML += `
+              <div class="menu-card">
+                <img src="${item.img}" alt="${item.name}">
+                <div class="menu-info">
+                  <h3>${item.name}</h3>
+                  <p>${item.desc}</p>
+                  <div class="price">${currency}${item.price.toLocaleString()}</div>
+                </div>
+                <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">+ Add</button>
+              </div>
+            `;
+          });
+        });
+      } catch (error) {
+        document.getElementById('res-name').innerText = "Menu Unavailable";
+        document.getElementById('menu-container').innerHTML = "<p style='text-align:center; color:red;'>Sorry, this digital menu file could not be loaded.</p>";
+      }
+    }
+
+    loadMenu();
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      total += price;
+      document.getElementById('cart-count').innerText = cart.length;
+      document.getElementById('cart-total').innerText = total.toLocaleString(undefined, {minimumFractionDigits: 2});
+    }
+
+    function sendOrder() {
+      if (cart.length === 0) {
+        alert("Please select at least one item.");
+        return;
+      }
+
+      const payload = {
+        restaurant_id: restaurantId,
+        restaurant_name: restaurantData.restaurantName,
+        table_number: tableNumber,
+        items: cart,
+        total_amount: total,
+        comment: document.getElementById('order-comment').value || "None",
+        timestamp: new Date().toISOString()
+      };
+
+      const webhookUrl = "https://your-n8n-instance.com/webhook/restaurant-order";
+
+      fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => {
+        alert(`Order sent successfully to the kitchen for Table ${tableNumber}!`);
+        cart = [];
+        total = 0;
+        document.getElementById('cart-count').innerText = "0";
+        document.getElementById('cart-total').innerText = "0.00";
+        document.getElementById('order-comment').value = "";
+      })
+      .catch(err => {
+        alert("Network error. Please call a waiter.");
+      });
+    }
+  </script>
+</body>
+</html>
