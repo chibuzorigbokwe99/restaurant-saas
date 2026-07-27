@@ -9,7 +9,7 @@
     .header { background: #111; color: white; padding: 20px 15px; text-align: center; }
     .header h1 { margin: 0 0 5px 0; font-size: 22px; }
     .table-badge { background: #28a745; color: white; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; display: inline-block; margin-top: 5px;}
-    .container { padding: 15px; padding-bottom: 140px; max-width: 600px; margin: 0 auto; }
+    .container { padding: 15px; padding-bottom: 180px; max-width: 600px; margin: 0 auto; }
     .category-title { font-size: 18px; font-weight: bold; margin: 20px 0 10px 0; color: #222; border-bottom: 2px solid #ddd; padding-bottom: 5px; }
     .menu-card { background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
     .menu-card img { width: 75px; height: 75px; border-radius: 8px; object-fit: cover; margin-right: 12px; }
@@ -20,7 +20,7 @@
     .add-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; cursor: pointer; }
     .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: #1a1a1a; color: white; padding: 15px; border-radius: 16px 16px 0 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; box-sizing: border-box;}
     .cart-summary { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; font-weight: 600; }
-    .comment-box { width: 100%; padding: 8px 10px; border-radius: 6px; border: none; margin-bottom: 10px; font-size: 13px; box-sizing: border-box; }
+    .input-box { width: 100%; padding: 8px 10px; border-radius: 6px; border: none; margin-bottom: 8px; font-size: 13px; box-sizing: border-box; }
     .order-btn { background: #28a745; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; width: 100%; font-size: 15px; cursor: pointer; }
   </style>
 </head>
@@ -40,7 +40,8 @@
       <span>Items: <span id="cart-count">0</span></span>
       <span>Total: <span id="currency-symbol">₦</span><span id="cart-total">0.00</span></span>
     </div>
-    <input type="text" id="order-comment" class="comment-box" placeholder="Special additions (e.g., extra pepper, no onions)">
+    <input type="text" id="customer-name" class="input-box" placeholder="Your Name (e.g., Gabriel)">
+    <input type="text" id="order-comment" class="input-box" placeholder="Special additions (e.g., extra pepper)">
     <button class="order-btn" onclick="sendOrder()">Send to Kitchen</button>
   </div>
 
@@ -58,7 +59,6 @@
 
     async function loadMenu() {
       try {
-        // Updated path with explicit relative notation for GitHub Pages reliability
         const response = await fetch(`./menus/${restaurantId}.json`);
         if (!response.ok) throw new Error("Menu not found");
         restaurantData = await response.json();
@@ -112,6 +112,7 @@
         restaurant_id: restaurantId,
         restaurant_name: restaurantData.restaurantName,
         table_number: tableNumber,
+        customer_name: document.getElementById('customer-name').value.trim() || "Walk-in Guest",
         items: cart,
         total_amount: total,
         comment: document.getElementById('order-comment').value || "None",
@@ -131,6 +132,7 @@
         total = 0;
         document.getElementById('cart-count').innerText = "0";
         document.getElementById('cart-total').innerText = "0.00";
+        document.getElementById('customer-name').value = "";
         document.getElementById('order-comment').value = "";
       })
       .catch(err => {
